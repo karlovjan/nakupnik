@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'repositories/hive_repository.dart';
-import 'services/settings_service.dart';
-
-final SettingService _settingService = SettingServiceImpl(HiveRepository());
+import 'globals.dart';
+import 'ui/pages/home_page.dart';
 
 void main() async {
-  await _settingService.init();
+  await settingService.init();
   runApp(const MyApp());
 }
 
@@ -16,21 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: _settingService.darkModeChangedListenable(),
+      valueListenable: settingService.darkModeChangedListenable(),
       builder: (context, darkModeValue, child) {
         return MaterialApp(
           themeMode: darkModeValue ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
-          home: Scaffold(
-            body: Center(
-              child: Switch(
-                value: darkModeValue,
-                onChanged: (val) {
-                  _settingService.changeDarkMode(val);
-                },
-              ),
-            ),
-          ),
+          home: const HomePage(),
         );
       },
     );
