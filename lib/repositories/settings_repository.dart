@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class HiveRepository {
-  static const settingBoxName = 'settings';
+class SettingsRepository {
+  static const boxName = 'settings';
   static const darkModeKey = 'darkMode';
 
-  late final Box _settingBox;
+  late final Box _box;
 
   var _hiveInitialized = false;
 
@@ -20,13 +19,13 @@ class HiveRepository {
 
   get isHiveInitialized => _hiveInitialized;
 
-  Future<void> openSettingBox() async {
-    _settingBox = await Hive.openBox(settingBoxName);
+  Future<void> openBox() async {
+    _box = await Hive.openBox(boxName);
 
     _darkModeChangeListenable = ValueNotifier(isDarkMode);
 
     _darkModeBoxListenable =
-        _settingBox.listenable(keys: <String>[darkModeKey]);
+        _box.listenable(keys: <String>[darkModeKey]);
     _darkModeBoxListenable.addListener(_darkModeValueChanged);
   }
 
@@ -35,21 +34,21 @@ class HiveRepository {
         _darkModeBoxListenable.value.get(darkModeKey);
   }
 
-  bool get isDarkMode => _settingBox.get(darkModeKey, defaultValue: false);
+  bool get isDarkMode => _box.get(darkModeKey, defaultValue: false);
 
   ValueListenable<Box> getSettingsBoxListenable() {
-    return _settingBox.listenable();
+    return _box.listenable();
   }
 
   void setDarkMode(bool newValue) {
-    _settingBox.put(darkModeKey, newValue);
+    _box.put(darkModeKey, newValue);
   }
 
   ValueListenable<bool> getDarkModeChangedListenable() =>
       _darkModeChangeListenable;
 
-  void closeSettingBox() {
-    _settingBox.close();
+  Future<void> closeBox() async {
     _darkModeBoxListenable.removeListener(_darkModeValueChanged);
+    await _box.close();
   }
 }

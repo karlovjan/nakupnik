@@ -23,6 +23,28 @@ class HomePage extends StatelessWidget {
       ),
       // body is the majority of the screen.
       body: const Text("hoj"),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: () {
+              //
+            },
+            tooltip: 'Pridej zbozi',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              //
+            },
+            tooltip: 'Nakupni listek',
+            child: const Icon(Icons.add_shopping_cart),
+          ),
+        ],
+      ),
     );
   }
 }

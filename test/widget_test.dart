@@ -7,24 +7,36 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nakupnik/globals.dart';
 import 'package:nakupnik/main.dart';
+import 'package:nakupnik/ui/pages/home_page.dart';
 
+import 'hive_test_utils.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  setUp(
+    () async {
+      await settingService.init();
+    },
+  );
+
+  tearDown(
+    () async {
+      // await settingService.dispose(); nesmim zavirat box, protoze se pak nesmaze z disku
+      await tearDownTestHive();
+    },
+  );
+
+  testWidgets('Start app test', (WidgetTester tester) async {
+    // await setUpTestHive();
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.byType(HomePage), findsOneWidget);
+    expect(find.byIcon(Icons.build), findsOneWidget);
+    expect(find.byIcon(Icons.build), findsOneWidget);
+    expect(find.text('hoj'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // await tearDownTestHive();
   });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../repositories/hive_repository.dart';
+import '../repositories/settings_repository.dart';
 
 abstract class SettingService {
   Future<void> init();
@@ -11,11 +11,11 @@ abstract class SettingService {
 
   void changeDarkMode(bool newValue);
 
-  void dispose();
+  Future<void> dispose();
 }
 
 class SettingServiceImpl implements SettingService {
-  final HiveRepository _repo;
+  final SettingsRepository _repo;
 
   SettingServiceImpl(this._repo);
 
@@ -25,7 +25,7 @@ class SettingServiceImpl implements SettingService {
       await _repo.initHive();
     }
 
-    await _repo.openSettingBox();
+    await _repo.openBox();
   }
 
   @override
@@ -44,8 +44,8 @@ class SettingServiceImpl implements SettingService {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     //TODO use it in statefull widget
-    _repo.closeSettingBox();
+    await _repo.closeBox();
   }
 }
