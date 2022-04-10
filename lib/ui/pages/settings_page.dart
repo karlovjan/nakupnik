@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../../globals.dart';
+import '../../services/settings_service.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  final SettingService _settingsService;
+
+  const SettingsPage({Key? key, required SettingService settingService})
+      : _settingsService = settingService,
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SettingsPageState();
+
+  bool isDarkMode() => _settingsService.isDarkMode();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late bool _darkMode;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _darkMode = settingService.isDarkMode();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,11 +39,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   width: 8,
                 ),
                 Switch(
-                  value: _darkMode,
+                  key: const Key('darkModeSwitchKey'),
+                  value: widget.isDarkMode(),
                   onChanged: (newValue) {
-                    settingService.changeDarkMode(newValue);
+                    widget._settingsService.changeDarkMode(newValue);
                     setState(() {
-                      _darkMode = newValue;
+                      //just rebuild
                     });
                   },
                 ),

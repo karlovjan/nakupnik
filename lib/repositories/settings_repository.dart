@@ -24,8 +24,7 @@ class SettingsRepository {
 
     _darkModeChangeListenable = ValueNotifier(isDarkMode);
 
-    _darkModeBoxListenable =
-        _box.listenable(keys: <String>[darkModeKey]);
+    _darkModeBoxListenable = _box.listenable(keys: <String>[darkModeKey]);
     _darkModeBoxListenable.addListener(_darkModeValueChanged);
   }
 
@@ -36,10 +35,6 @@ class SettingsRepository {
 
   bool get isDarkMode => _box.get(darkModeKey, defaultValue: false);
 
-  ValueListenable<Box> getSettingsBoxListenable() {
-    return _box.listenable();
-  }
-
   void setDarkMode(bool newValue) {
     _box.put(darkModeKey, newValue);
   }
@@ -49,6 +44,7 @@ class SettingsRepository {
 
   Future<void> closeBox() async {
     _darkModeBoxListenable.removeListener(_darkModeValueChanged);
+    _darkModeChangeListenable.dispose();
     await _box.close();
   }
 }

@@ -17,7 +17,8 @@ abstract class SettingService {
 class SettingServiceImpl implements SettingService {
   final SettingsRepository _repo;
 
-  SettingServiceImpl(this._repo);
+  const SettingServiceImpl(SettingsRepository settingsRepository)
+      : _repo = settingsRepository;
 
   @override
   Future<void> init() async {

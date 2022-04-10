@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'settings_page.dart';
+import '../routes/main_routes.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,38 +13,38 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.build),
-            tooltip: 'Preferences',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
-            ),
+            tooltip: 'Settings',
+            onPressed: () =>
+                Navigator.pushNamed(context, StaticPages.settings.routeName),
           ),
         ],
       ),
       // body is the majority of the screen.
       body: const Text("hoj"),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: () {
-              //
-            },
-            tooltip: 'Pridej zbozi',
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              //
-            },
-            tooltip: 'Nakupni listek',
-            child: const Icon(Icons.add_shopping_cart),
-          ),
-        ],
-      ),
+      // floatingActionButton: Row(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: <Widget>[
+      //     FloatingActionButton(
+      //       key: const Key('addGoodsFAB'),
+      //       onPressed: () {
+      //         //
+      //       },
+      //       tooltip: 'Pridej zbozi',
+      //       child: const Icon(Icons.add),
+      //     ),
+      //     const SizedBox(
+      //       width: 8,
+      //     ),
+      //     FloatingActionButton(
+      //       key: const Key('createShoppingCartFAB'),
+      //       onPressed: () {
+      //         //
+      //       },
+      //       tooltip: 'Nakupni listek',
+      //       child: const Icon(Icons.add_shopping_cart),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
