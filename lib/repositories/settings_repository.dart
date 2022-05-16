@@ -7,17 +7,8 @@ class SettingsRepository {
 
   late final Box _box;
 
-  var _hiveInitialized = false;
-
   late ValueListenable<Box> _darkModeBoxListenable;
   late ValueNotifier<bool> _darkModeChangeListenable;
-
-  Future<void> initHive() async {
-    await Hive.initFlutter();
-    _hiveInitialized = true;
-  }
-
-  get isHiveInitialized => _hiveInitialized;
 
   Future<void> openBox() async {
     _box = await Hive.openBox(boxName);

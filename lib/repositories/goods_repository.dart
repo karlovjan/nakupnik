@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nakupnik/models/goods.dart';
 
 class GoodsRepository {
   static const boxName = 'goods';
@@ -6,14 +7,7 @@ class GoodsRepository {
 
   late final Box _box;
 
-  var _hiveInitialized = false;
-
-  Future<void> initHive() async {
-    await Hive.initFlutter();
-    _hiveInitialized = true;
-  }
-
-  get isHiveInitialized => _hiveInitialized;
+  int get itemsCount => _box.length;
 
   Future<void> openBox() async {
     _box = await Hive.openBox(
@@ -22,5 +16,9 @@ class GoodsRepository {
 
   Future<void> closeBox() async {
     await _box.close();
+  }
+
+  Future<int> putNew(Goods newGoods) {
+    return _box.add(newGoods.toJson());
   }
 }

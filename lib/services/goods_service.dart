@@ -1,9 +1,12 @@
-import 'package:nakupnik/repositories/goods_repository.dart';
+import '../models/goods.dart';
+import '../repositories/goods_repository.dart';
 
 abstract class GoodsService {
   Future<void> init();
 
   Future<void> dispose();
+
+  Future<int> addNewGoods(Goods newGoods);
 }
 
 class GoodsServiceImpl extends GoodsService {
@@ -19,10 +22,11 @@ class GoodsServiceImpl extends GoodsService {
 
   @override
   Future<void> init() async {
-    if (!_repo.isHiveInitialized) {
-      await _repo.initHive();
-    }
-
     await _repo.openBox();
+  }
+
+  @override
+  Future<int> addNewGoods(Goods newGoods) {
+    return _repo.putNew(newGoods);
   }
 }

@@ -1,4 +1,4 @@
-enum StaticPages { home, settings }
+enum StaticPages { home, settings, household }
 
 extension StaticPageRoute on StaticPages {
   String get routeName {
@@ -9,6 +9,8 @@ extension StaticPageRoute on StaticPages {
         return defaultRoute;
       case StaticPages.settings:
         return '/settings';
+      case StaticPages.household:
+        return '/household';
       default:
         return defaultRoute;
     }

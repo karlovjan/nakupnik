@@ -22,10 +22,6 @@ class SettingServiceImpl implements SettingService {
 
   @override
   Future<void> init() async {
-    if (!_repo.isHiveInitialized) {
-      await _repo.initHive();
-    }
-
     await _repo.openBox();
   }
 

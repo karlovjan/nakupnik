@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 @immutable
-class GoodsGroup {
+class Household {
   final String name;
 
-  const GoodsGroup(this.name);
+  const Household(this.name);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GoodsGroup &&
+      other is Household &&
           runtimeType == other.runtimeType &&
           name == other.name;
 
@@ -20,7 +20,7 @@ class GoodsGroup {
 
   @override
   String toString() {
-    return 'GoodsGroup{name: $name}';
+    return 'Household{name: $name}';
   }
 
   Map<String, dynamic> toMap() {
@@ -29,14 +29,14 @@ class GoodsGroup {
     };
   }
 
-  factory GoodsGroup.fromMap(Map<String, dynamic> map) {
-    return GoodsGroup(
+  factory Household.fromMap(Map<String, dynamic> map) {
+    return Household(
       map['name'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory GoodsGroup.fromJson(String source) =>
-      GoodsGroup.fromMap(json.decode(source));
+  factory Household.fromJson(String source) =>
+      Household.fromMap(json.decode(source));
 }
