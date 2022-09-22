@@ -1,10 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../models/goods.dart';
+import '../models/goods_item.dart';
+import '../models/household.dart';
 
-class GoodsRepository {
-  static const boxName = 'goods';
-  static const nameKey = 'name';
+class GoodsItemRepository {
+  static const boxName = 'goods_items';
 
   late final Box<String> _box;
 
@@ -31,19 +31,22 @@ class GoodsRepository {
     await _box.close();
   }
 
-  Future<int> putNew(Goods newGoods) {
+  Future<int> putNew(GoodsItem newGoods) {
     return _box.add(newGoods.toJson());
   }
 
-  List<Goods> getAll() {
-    return _box.values.map((e) => Goods.fromJson(e)).toList(growable: false);
+  List<GoodsItem> getAll(Household household) {
+    return _box.values
+        .map((e) => GoodsItem.fromJson(e))
+        .where((gi) => gi.household == household)
+        .toList(growable: false);
   }
 
-  Future<void> remove(Goods goods) {
+  Future<void> remove(GoodsItem item) {
     return _box.delete(_box
         .toMap()
         .entries
-        .firstWhere((element) => Goods.fromJson(element.value) == goods)
+        .firstWhere((element) => GoodsItem.fromJson(element.value) == item)
         .key);
   }
 }

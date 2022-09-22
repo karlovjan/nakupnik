@@ -63,3 +63,19 @@ class HouseholdListLoaderIndicator extends DataLoaderIndicator {
     Key? key,
   }) : super(const DataLoaderTitle(loaderText), key: key);
 }
+
+class GoodsItemListLoaderIndicator extends DataLoaderIndicator {
+  static const loaderText = 'Goods Items loading ...';
+
+  const GoodsItemListLoaderIndicator({
+    Key? key,
+  }) : super(const DataLoaderTitle(loaderText), key: key);
+}
+
+class GoodsListLoaderIndicator extends DataLoaderIndicator {
+  static const loaderText = 'Goods loading ...';
+
+  const GoodsListLoaderIndicator({
+    Key? key,
+  }) : super(const DataLoaderTitle(loaderText), key: key);
+}

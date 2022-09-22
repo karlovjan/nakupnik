@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nakupnik/models/household.dart';
+import 'package:nakupnik/services/goods_item_service.dart';
+import 'package:nakupnik/services/household_service.dart';
 
-import '../routes/main_routes.dart';
+import '../../routes/main_routes.dart';
 
-class HouseholdPage extends StatefulWidget {
-  const HouseholdPage({Key? key}) : super(key: key);
+class EditHouseholdPage extends StatelessWidget {
+  final HouseholdService _householdService;
 
-  @override
-  _HouseholdPageState createState() => _HouseholdPageState();
-}
+  const EditHouseholdPage(HouseholdService householdService, {Key? key}) : _householdService = householdService, super(key: key);
 
-class _HouseholdPageState extends State<HouseholdPage> {
   @override
   Widget build(BuildContext context) {
     final household = ModalRoute.of(context)!.settings.arguments as Household;

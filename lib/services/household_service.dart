@@ -12,20 +12,23 @@ abstract class HouseholdService {
 
   List<Household> getHouseholds();
 
-  ValueListenable<void> countListenable();
+  ValueListenable<int> countListenable();
+
+  bool existsHousehold(String householdName);
+
+  Future<void> delete(Household household);
 }
 
 class HouseholdServiceImpl extends HouseholdService {
   final HouseholdRepository _repo;
 
-  late ValueNotifier<int> _countListenable;
+  late final ValueNotifier<int> _countListenable = ValueNotifier(_repo.itemsCount);
 
   HouseholdServiceImpl(this._repo);
 
   @override
   Future<void> init() async {
     await _repo.openBox();
-    _countListenable = ValueNotifier(_repo.itemsCount);
   }
 
   @override
@@ -44,10 +47,23 @@ class HouseholdServiceImpl extends HouseholdService {
   }
 
   @override
-  ValueListenable<void> countListenable() => _countListenable;
+  ValueListenable<int> countListenable() => _countListenable;
 
   @override
   List<Household> getHouseholds() {
     return _repo.getAll();
+  }
+
+  @override
+  bool existsHousehold(String householdName) {
+    return getHouseholds().any((household) => household.name == householdName);
+  }
+
+  @override
+  Future<void> delete(Household household) async {
+    final result = await _repo.remove(household);
+    _countListenable.value = _repo.itemsCount;
+
+    return result;
   }
 }

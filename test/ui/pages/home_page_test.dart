@@ -24,7 +24,8 @@ void main() {
   setUp(
     () async {
       householdService = HouseholdServiceImpl(HouseholdRepository());
-      // await householdService?.init();
+      //TODO odstranit, jen kdyz udelm init tady tak to funguje v init Widget je pozde v testu
+      await householdService?.init();
     },
   );
 
@@ -47,12 +48,11 @@ void main() {
     ));
 
     expect(find.byType(HomePage), findsOneWidget);
-    expect(find.byKey(const Key('addGoodsFAB')), findsOneWidget);
+    expect(find.byKey(const Key('addHouseholdFAB')), findsOneWidget);
     // expect(find.byKey(const Key('createShoppingCartFAB')), findsOneWidget);
     expect(find.byType(HouseholdListLoaderIndicator), findsOneWidget);
 
-    await tester.pumpAndSettle(const Duration(seconds: 100));
-    // await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('You don\'t have any goods. Add some.'), findsOneWidget);
   });
 
@@ -66,5 +66,57 @@ void main() {
 
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.build), findsOneWidget);
+  });
+/*
+  testWidgets('add household ', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: HomePage(householdService!),
+    ));
+
+    await tester.tap(find.byKey(const Key('addHouseholdFAB')));
+
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    // expect(find.byKey(const Key('createShoppingCartFAB')), findsOneWidget);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.byType(TextButton), findsNWidgets(2));
+
+    String householdName = 'Test household name';
+    await tester.enterText(find.byType(TextField), householdName);
+
+    await tester.tap(find.byType(TextButton).last);
+
+    await tester.pump(const Duration(seconds: 10));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+
+    expect(find.byType(AlertDialog), findsNothing);
+    // expect(find.byType(ListTile), findsOneWidget);
+    expect(find.text(householdName), findsOneWidget);
+  });
+*/
+
+  testWidgets('add household - cancel dialog', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: HomePage(householdService!),
+    ));
+
+    await tester.tap(find.byKey(const Key('addHouseholdFAB')));
+
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    // expect(find.byKey(const Key('createShoppingCartFAB')), findsOneWidget);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.byType(TextButton), findsNWidgets(2));
+
+    String householdName = 'Test household name';
+    await tester.enterText(find.byType(TextField), householdName);
+
+    await tester.tap(find.byType(TextButton).first);
+
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text(householdName), findsNothing);
+    expect(find.text('You don\'t have any goods. Add some.'), findsOneWidget);
   });
 }

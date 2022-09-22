@@ -1,30 +1,30 @@
 import 'package:flutter/foundation.dart';
 
-import '../models/goods.dart';
-import '../repositories/goods_repository.dart';
+import '../models/goods_group.dart';
+import '../repositories/goods_group_repository.dart';
 
-abstract class GoodsService {
+abstract class GoodsGroupService {
   Future<void> init();
 
   Future<void> dispose();
 
-  Future<int> addNewGoods(Goods newGoods);
+  Future<int> addNewGoodsGroup(GoodsGroup newGoodsGroup);
 
-  List<Goods> getAll();
+  List<GoodsGroup> getAll();
 
   ValueListenable<int> countListenable();
 
-  bool existsGoods(String goodsName);
+  bool existsGoodsGroup(String goodsGroupName);
 
-  Future<void> delete(Goods item);
+  Future<void> delete(GoodsGroup item);
 }
 
-class GoodsServiceImpl extends GoodsService {
-  final GoodsRepository _repo;
+class GoodsGroupServiceImpl extends GoodsGroupService {
+  final GoodsGroupRepository _repo;
 
   late ValueNotifier<int> _countListenable;
 
-  GoodsServiceImpl(this._repo);
+  GoodsGroupServiceImpl(this._repo);
 
   @override
   Future<void> init() async {
@@ -40,8 +40,8 @@ class GoodsServiceImpl extends GoodsService {
   }
 
   @override
-  Future<int> addNewGoods(Goods newGoods) async {
-    int index = await _repo.putNew(newGoods);
+  Future<int> addNewGoodsGroup(GoodsGroup newGoodsGroup) async {
+    int index = await _repo.putNew(newGoodsGroup);
 
     _countListenable.value = _repo.itemsCount;
 
@@ -52,17 +52,17 @@ class GoodsServiceImpl extends GoodsService {
   ValueListenable<int> countListenable() => _countListenable;
 
   @override
-  List<Goods> getAll() {
+  List<GoodsGroup> getAll() {
     return _repo.getAll();
   }
 
   @override
-  bool existsGoods(String goodsName) {
-    return getAll().any((goods) => goods.name == goodsName);
+  bool existsGoodsGroup(String goodsGroupName) {
+    return getAll().any((group) => group.name == goodsGroupName);
   }
 
   @override
-  Future<void> delete(Goods item) async {
+  Future<void> delete(GoodsGroup item) async {
     final result = await _repo.remove(item);
     _countListenable.value = _repo.itemsCount;
 

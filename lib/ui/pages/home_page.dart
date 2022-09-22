@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nakupnik/ui/pages/household/new_household_page.dart';
 
 import '../../models/household.dart';
 import '../../services/household_service.dart';
@@ -18,35 +19,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final Future<void> _initHouseholdServiceFuture = widget._householdService.init();
-
-  late TextEditingController _enterHouseholdNameController;
+  late final Future<void> _initHouseholdServiceFuture =
+      widget._householdService.init();
 
   @override
   void initState() {
     super.initState();
-
-    _enterHouseholdNameController = TextEditingController();
   }
-  
+
   @override
   void dispose() {
-    _disposeHouseholdService();
-    _enterHouseholdNameController.dispose();
+    // _disposeHouseholdService();
     super.dispose();
   }
 
-  Future<void> _disposeHouseholdService() async => await widget._householdService.dispose();
-  
+  Future<void> _disposeHouseholdService() async =>
+      await widget._householdService.dispose();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Household list'),
+        title: const Text('Seznam domacnosti'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.list_rounded),
+            tooltip: 'Prehled zbozi',
+            onPressed: () =>
+                Navigator.pushNamed(context, StaticPages.goods.routeName),
+          ),
+          IconButton(
             icon: const Icon(Icons.build),
-            tooltip: 'Settings',
+            tooltip: 'Nastaveni',
             onPressed: () =>
                 Navigator.pushNamed(context, StaticPages.settings.routeName),
           ),
@@ -57,30 +61,11 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         key: const Key('addHouseholdFAB'),
         heroTag: 'addHouseholdFAB',
-        onPressed: () => showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Pridej novou domacnost'),
-            content: TextField(
-              autofocus: true,
-              decoration: const InputDecoration(hintText: 'Zadej nazev domacnosti'),
-              controller: _enterHouseholdNameController,
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Zavri'),
-              ),
-              TextButton(
-                onPressed: () {
-                  widget._householdService.addNewHousehold(Household(_enterHouseholdNameController.value.text));
-                  Navigator.pop(context);
-                },
-                child: const Text('Uloz'),
-              ),
-            ],
-          ),
-        ),
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    NewHouseholdPage(widget._householdService))),
         tooltip: 'Pridej domacnost',
         child: const Icon(Icons.add),
       ),
@@ -102,7 +87,6 @@ class _HomePageState extends State<HomePage> {
           }
 
           //not to use if (snapshot.hasData) future builder is Void type , never returns data!!
-
           return ValueListenableBuilder<void>(
             valueListenable: widget._householdService.countListenable(),
             builder: (context, nothing, _) => _householdListView(context),
@@ -110,7 +94,7 @@ class _HomePageState extends State<HomePage> {
         }
         //default
         return Text(
-            'Sync preferences was not loaded... Future builder State: ${snapshot.connectionState}');
+            'Data was not loaded... Future builder State: ${snapshot.connectionState}');
       },
     );
   }
@@ -118,7 +102,7 @@ class _HomePageState extends State<HomePage> {
   Widget _householdListView(BuildContext context) {
     List<Household> households = widget._householdService.getHouseholds();
     if (households.isEmpty) {
-      return const Text('You don\'t have any goods. Add some.');
+      return const Text('You don\'t have any household. Add some.');
     }
 
     return ListView.builder(
@@ -132,6 +116,30 @@ class _HomePageState extends State<HomePage> {
           onTap: () => Navigator.pushNamed(
               context, StaticPages.household.routeName,
               arguments: household),
+          trailing: TextButton.icon(
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Zrust domacnost'),
+                content: Text('Opravdu chcete zrusit domacnost ${household.name}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Ne'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await widget._householdService.delete(household);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Ano'),
+                  ),
+                ],
+              ),
+            ),
+            icon: const Icon(Icons.highlight_remove_outlined),
+            label: const Text(''),
+          ),
         );
       },
     );
