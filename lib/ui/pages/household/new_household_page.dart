@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nakupnik/models/household.dart';
-import 'package:nakupnik/services/goods_item_service.dart';
 import 'package:nakupnik/services/household_service.dart';
-
-import '../../routes/main_routes.dart';
 
 class NewHouseholdPage extends StatefulWidget {
   final HouseholdService _householdService;
 
-  const NewHouseholdPage(HouseholdService householdService, {Key? key}) : _householdService = householdService, super(key: key);
+  const NewHouseholdPage(HouseholdService householdService, {Key? key})
+      : _householdService = householdService,
+        super(key: key);
 
   @override
-  _NewHouseholdPageState createState() => _NewHouseholdPageState();
+  State<NewHouseholdPage> createState() => _NewHouseholdPageState();
 }
 
 class _NewHouseholdPageState extends State<NewHouseholdPage> {
-
   final _formKey = GlobalKey<FormState>();
   final _enterHouseholdNameController = TextEditingController();
 
@@ -57,7 +55,7 @@ class _NewHouseholdPageState extends State<NewHouseholdPage> {
                 return 'Nazev domacnosti nesmi byt prazdny';
               }
 
-              if(widget._householdService.existsHousehold(value)){
+              if (widget._householdService.existsHousehold(value)) {
                 return 'Zadana domacnost uz existuje';
               }
               return null;
@@ -69,7 +67,11 @@ class _NewHouseholdPageState extends State<NewHouseholdPage> {
             child: ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  await widget._householdService.addNewHousehold(Household(_enterHouseholdNameController.value.text));
+                  await widget._householdService.addNewHousehold(
+                      Household(_enterHouseholdNameController.value.text));
+                  if(!mounted) {
+                    return;
+                  }
                   Navigator.pop(context);
                 }
               },

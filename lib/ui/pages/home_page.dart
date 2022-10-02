@@ -82,8 +82,7 @@ class _HomePageState extends State<HomePage> {
 
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            return Text('cannot get list of households. Error: ' +
-                ErrorHandler.getErrorMessage(snapshot.error));
+            return Text('cannot get list of households. Error: ${ErrorHandler.getErrorMessage(snapshot.error)}');
           }
 
           //not to use if (snapshot.hasData) future builder is Void type , never returns data!!
@@ -130,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                   TextButton(
                     onPressed: () async {
                       await widget._householdService.delete(household);
+                      if(!mounted) return;
                       Navigator.pop(context);
                     },
                     child: const Text('Ano'),

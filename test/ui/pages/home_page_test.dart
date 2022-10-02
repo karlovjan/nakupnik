@@ -11,6 +11,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nakupnik/repositories/household_repository.dart';
 import 'package:nakupnik/services/household_service.dart';
 import 'package:nakupnik/ui/pages/home_page.dart';
+import 'package:nakupnik/ui/pages/household/new_household_page.dart';
 import 'package:nakupnik/ui/routes/main_routes.dart';
 import 'package:nakupnik/ui/widgets/data_loader_indicator.dart';
 
@@ -67,8 +68,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.build), findsOneWidget);
   });
-/*
-  testWidgets('add household ', (WidgetTester tester) async {
+
+  testWidgets('add household', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: HomePage(householdService!),
     ));
@@ -77,25 +78,23 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // expect(find.byKey(const Key('createShoppingCartFAB')), findsOneWidget);
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.byType(TextButton), findsNWidgets(2));
+    expect(find.byType(NewHouseholdPage), findsOneWidget);
 
     String householdName = 'Test household name';
     await tester.enterText(find.byType(TextField), householdName);
 
-    await tester.tap(find.byType(TextButton).last);
+    await tester.tap(find.byType(ElevatedButton).first);
 
-    await tester.pump(const Duration(seconds: 10));
-    await tester.pumpAndSettle(const Duration(seconds: 10));
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
-    expect(find.byType(AlertDialog), findsNothing);
-    // expect(find.byType(ListTile), findsOneWidget);
+    //jsem zpet na homepage?
+    expect(find.byType(HomePage), findsOneWidget);
+    //existuje polozka s nazvem domacnosti
     expect(find.text(householdName), findsOneWidget);
+    expect(find.byType(ListTile), findsOneWidget);
   });
-*/
 
-  testWidgets('add household - cancel dialog', (WidgetTester tester) async {
+  testWidgets('delete household', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: HomePage(householdService!),
     ));
@@ -104,9 +103,7 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // expect(find.byKey(const Key('createShoppingCartFAB')), findsOneWidget);
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.byType(TextButton), findsNWidgets(2));
+    expect(find.byType(NewHouseholdPage), findsOneWidget);
 
     String householdName = 'Test household name';
     await tester.enterText(find.byType(TextField), householdName);
@@ -115,8 +112,23 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
+    //existuje polozka s nazvem domacnosti
+    expect(find.text(householdName), findsOneWidget);
+
+    //click delete button
+    await tester.tap(find.byType(TextButton));
+
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.byType(TextButton), findsNWidgets(2));
+
+    //prvni tlacitko je Ne
+    await tester.tap(find.byType(TextButton).first);
+
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
     expect(find.byType(AlertDialog), findsNothing);
-    expect(find.text(householdName), findsNothing);
-    expect(find.text('You don\'t have any goods. Add some.'), findsOneWidget);
+    expect(find.text(householdName), findsOneWidget);
   });
 }
